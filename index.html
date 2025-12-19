@@ -39,6 +39,114 @@
             }
         }
 
+        /* STAV 1: Zatavená krabice */
+        .gift-box-closed {
+            max-width: 400px;
+            width: 100%;
+            perspective: 1000px;
+            z-index: 10;
+        }
+
+        .box-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 0 auto;
+            cursor: pointer;
+        }
+
+        .box-base {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 50%, #c92a2a 100%);
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 120px;
+            animation: boxBounce 2s ease-in-out infinite;
+            transition: all 0.3s ease;
+        }
+
+        .box-base:hover {
+            transform: scale(1.05);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes boxBounce {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        .ribbon-horizontal {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 30px;
+            background: linear-gradient(90deg, #ffd700 0%, #ffed4e 50%, #ffd700 100%);
+            z-index: 5;
+            transform: translateY(-50%);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .ribbon-vertical {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 30px;
+            background: linear-gradient(90deg, #ffd700 0%, #ffed4e 50%, #ffd700 100%);
+            z-index: 5;
+            transform: translateX(-50%);
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .bow {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 60px;
+            z-index: 10;
+            animation: bowSway 1.5s ease-in-out infinite;
+        }
+
+        @keyframes bowSway {
+            0%, 100% {
+                transform: translateX(-50%) rotateZ(-5deg);
+            }
+            50% {
+                transform: translateX(-50%) rotateZ(5deg);
+            }
+        }
+
+        .click-hint {
+            text-align: center;
+            color: white;
+            margin-top: 30px;
+            font-size: 1.2em;
+            animation: pulse-text 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-text {
+            0%, 100% {
+                opacity: 0.7;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+        }
+
+        /* STAV 2: Otevřená krabice */
         .container {
             background: white;
             border-radius: 20px;
@@ -49,16 +157,21 @@
             animation: slideIn 0.8s ease-out;
             z-index: 10;
             position: relative;
+            display: none;
+        }
+
+        .container.show {
+            display: block;
         }
 
         @keyframes slideIn {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: scale(0.8) rotateX(20deg);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: scale(1) rotateX(0);
             }
         }
 
@@ -226,6 +339,10 @@
         }
 
         @media (max-width: 480px) {
+            .box-base {
+                font-size: 80px;
+            }
+
             .container {
                 padding: 25px;
             }
@@ -246,11 +363,26 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <!-- STAV 1: Zatavená krabice -->
+    <div id="boxSection" class="gift-box-closed">
+        <div class="box-container" id="boxContainer">
+            <div class="box-base">
+                <div class="bow">🎀</div>
+                <div class="ribbon-horizontal"></div>
+                <div class="ribbon-vertical"></div>
+            </div>
+        </div>
+        <div class="click-hint" id="hint">
+            👆 Klikni na krabici 👆
+        </div>
+    </div>
+
+    <!-- STAV 2: Otevřená krabice s dárkem -->
+    <div id="giftSection" class="container">
         <div class="ribbon"></div>
         <div class="header">
-            <div class="emoji">🎁</div>
-            <h1>Sofi, máš dárek!</h1>
+            <div class="emoji">🎉</div>
+            <h1>Ami, máš dárek!</h1>
             <p class="subtitle">Vybaleníme si to spolu 🎄</p>
         </div>
 
@@ -291,13 +423,7 @@
         // Vytváření sněhu
         setInterval(createSnowflake, 300);
 
-        // Konfety efekt při kliknutí
-        document.querySelector('.container').addEventListener('click', () => {
-            for (let i = 0; i < 50; i++) {
-                createConfetti();
-            }
-        });
-
+        // Konfety efekt
         function createConfetti() {
             const confetti = document.createElement('div');
             confetti.classList.add('confetti');
@@ -317,8 +443,8 @@
             const animate = () => {
                 x += xV;
                 y += yV;
-                yV += 0.2; // gravitace
-                xV *= 0.99; // odpor vzduchu
+                yV += 0.2;
+                xV *= 0.99;
 
                 confetti.style.left = x + 'px';
                 confetti.style.top = y + 'px';
@@ -335,7 +461,67 @@
             animate();
         }
 
-        // Log když se stránka otevře
+        // ZVUK: Pling (Magický zvuk)
+        // Jeden plynulý tón od nižšího k vyššímu zvuku
+        function playPlingSound() {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const now = audioContext.currentTime;
+            
+            // Vytvoření oscilátoru
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            
+            // Připojení k audio kontextu
+            osc.connect(gain);
+            gain.connect(audioContext.destination);
+            
+            // Plynulý přechod z nižšího na vyšší frekvenci (magický efekt)
+            osc.frequency.setValueAtTime(400, now);
+            osc.frequency.exponentialRampToValueAtTime(1200, now + 0.3);
+            
+            // Nastavení hlasitosti
+            gain.gain.setValueAtTime(0.3, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+            
+            // Spuštění zvuku
+            osc.start(now);
+            osc.stop(now + 0.3);
+        }
+
+        // Interakce: Kliknutí na krabici
+        const boxContainer = document.getElementById('boxContainer');
+        const boxSection = document.getElementById('boxSection');
+        const giftSection = document.getElementById('giftSection');
+        let isOpened = false;
+
+        boxContainer.addEventListener('click', function() {
+            if (!isOpened) {
+                isOpened = true;
+                
+                // Přehrát Pling zvuk
+                playPlingSound();
+                
+                // Skrýt krabici a zobrazit dárek
+                boxSection.style.display = 'none';
+                giftSection.classList.add('show');
+                
+                // Spustit konfety
+                for (let i = 0; i < 100; i++) {
+                    setTimeout(() => {
+                        createConfetti();
+                    }, i * 30);
+                }
+            }
+        });
+
+        // Konfety efekt při kliknutí na otevřený dárek
+        giftSection.addEventListener('click', () => {
+            playPlingSound();
+            for (let i = 0; i < 50; i++) {
+                createConfetti();
+            }
+        });
+
         window.addEventListener('load', () => {
             console.log('Vánoční stránka se otevřela! 🎄');
         });
