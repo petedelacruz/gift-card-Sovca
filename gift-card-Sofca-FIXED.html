@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vánoční Dárek 🎄</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a472a 0%, #2d5a3d 50%, #1a3a2e 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .snowflake {
+            position: fixed;
+            top: -10px;
+            z-index: 1;
+            user-select: none;
+            cursor: default;
+            font-size: 1.5em;
+            color: rgba(255, 255, 255, 0.7);
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotateZ(360deg);
+            }
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            padding: 40px;
+            animation: slideIn 0.8s ease-out;
+            z-index: 10;
+            position: relative;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .emoji {
+            font-size: 60px;
+            animation: bounce 1s ease-in-out infinite;
+            display: inline-block;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        h1 {
+            color: #1a472a;
+            font-size: 2.5em;
+            margin: 20px 0 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+        }
+
+        .gift-container {
+            background: linear-gradient(135deg, #f5f5f5 0%, #efefef 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .gift-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .gift-item:nth-child(1) {
+            animation-delay: 0.2s;
+        }
+
+        .gift-item:nth-child(2) {
+            animation-delay: 0.4s;
+        }
+
+        .gift-item:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .gift-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .gift-icon {
+            font-size: 3em;
+            margin-right: 20px;
+            animation: pulse 2s ease-in-out infinite;
+            flex-shrink: 0;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .gift-info h3 {
+            color: #1a472a;
+            font-size: 1.4em;
+            margin-bottom: 5px;
+        }
+
+        .gift-info p {
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        .amount {
+            color: #d4af37;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .message {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .message p {
+            color: #1a472a;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+
+        .footer {
+            text-align: center;
+            color: #999;
+            font-size: 0.95em;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+        }
+
+        .heart {
+            color: #e74c3c;
+            animation: heartbeat 1.3s ease-in-out infinite;
+            display: inline-block;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% {
+                transform: scale(1);
+            }
+            25% {
+                transform: scale(1.3);
+            }
+        }
+
+        .ribbon {
+            position: absolute;
+            top: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            height: 10px;
+            background: linear-gradient(90deg, #d4af37 0%, #ffed4e 50%, #d4af37 100%);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+        }
+
+        .confetti {
+            position: fixed;
+            pointer-events: none;
+            z-index: 20;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .gift-icon {
+                font-size: 2.5em;
+                margin-right: 15px;
+            }
+
+            .gift-info h3 {
+                font-size: 1.2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="ribbon"></div>
+        <div class="header">
+            <div class="emoji">🎁</div>
+            <h1>Máš Dárek!</h1>
+            <p class="subtitle">Vybaleníme si to spolu 🎄</p>
+        </div>
+
+        <div class="message">
+            <p>S láskou od maminky a tatínka <span class="heart">❤️</span></p>
+        </div>
+
+        <div class="gift-container">
+            <div class="gift-item">
+                <div class="gift-icon">📱</div>
+                <div class="gift-info">
+                    <h3>iMac</h3>
+                    <p>Příspěvek na tvůj iPad <span class="amount">- 8000 Kč</span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Vánoce 2025 🎅</p>
+        </div>
+    </div>
+
+    <script>
+        // Generování sněhových vloček
+        function createSnowflake() {
+            const snowflake = document.createElement('div');
+            snowflake.classList.add('snowflake');
+            snowflake.textContent = ['❄️', '⛄', '❅', '❆'][Math.random() * 4 | 0];
+            snowflake.style.left = Math.random() * window.innerWidth + 'px';
+            snowflake.style.animationDuration = Math.random() * 10 + 10 + 's';
+            snowflake.style.opacity = Math.random() * 0.5 + 0.3;
+            
+            document.body.appendChild(snowflake);
+            
+            setTimeout(() => snowflake.remove(), 20000);
+        }
+
+        // Vytváření sněhu
+        setInterval(createSnowflake, 300);
+
+        // Konfety efekt při kliknutí
+        document.querySelector('.container').addEventListener('click', () => {
+            for (let i = 0; i < 50; i++) {
+                createConfetti();
+            }
+        });
+
+        function createConfetti() {
+            const confetti = document.createElement('div');
+            confetti.classList.add('confetti');
+            confetti.textContent = ['🎉', '✨', '🎊', '⭐', '🌟'][Math.random() * 5 | 0];
+            confetti.style.left = Math.random() * window.innerWidth + 'px';
+            confetti.style.top = Math.random() * window.innerHeight + 'px';
+            confetti.style.fontSize = Math.random() * 30 + 20 + 'px';
+            
+            const xVel = Math.random() * 8 - 4;
+            const yVel = Math.random() * -8 - 2;
+            
+            let x = parseFloat(confetti.style.left);
+            let y = parseFloat(confetti.style.top);
+            let xV = xVel;
+            let yV = yVel;
+
+            const animate = () => {
+                x += xV;
+                y += yV;
+                yV += 0.2; // gravitace
+                xV *= 0.99; // odpor vzduchu
+
+                confetti.style.left = x + 'px';
+                confetti.style.top = y + 'px';
+                confetti.style.opacity = Math.max(0, parseFloat(confetti.style.opacity || 1) - 0.01);
+
+                if (y < window.innerHeight && parseFloat(confetti.style.opacity) > 0) {
+                    requestAnimationFrame(animate);
+                } else {
+                    confetti.remove();
+                }
+            };
+
+            document.body.appendChild(confetti);
+            animate();
+        }
+
+        // Log když se stránka otevře
+        window.addEventListener('load', () => {
+            console.log('Vánoční stránka se otevřela! 🎄');
+        });
+    </script>
+</body>
+</html>
